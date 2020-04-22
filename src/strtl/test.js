@@ -1,5 +1,5 @@
-import strtl from './index.js';
-import assert from 'assert';
+const strtl = require('./index.js');
+const assert = require('assert');
 
 const tests = [];
 const only = [];

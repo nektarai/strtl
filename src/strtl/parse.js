@@ -21,7 +21,7 @@ const transitions = {
   }
 }
 
-export default function parse(string) {
+module.exports = function parse(string) {
   const stack = [];
   let context = 'template';
   let startIx = 0, i = 0;

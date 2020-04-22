@@ -1,4 +1,4 @@
-export default function render(nodes, scopes, helperFns) {
+module.exports = function render(nodes, scopes, helperFns) {
   return nodes.map(node => {
     if (typeof node === 'string') return node;
     const { tag, variable, template, helpers } = node;
