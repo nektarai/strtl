@@ -1,31 +1,5 @@
-const strtl = require('./index.js');
-const assert = require('assert');
-
-const tests = [];
-const only = [];
-
-function run() {
-  if (only.length) {
-    only.forEach(runTest);
-  } else {
-    tests.forEach(runTest);
-  }
-}
-
-function runTest([template, ...args]) {
-  const expected = args.pop();
-  try {
-    assert.equal(strtl(template, ...args), expected);
-    console.log('PASS', template);
-  } catch (e) {
-    console.log('FAIL', template);
-    console.error(e);
-  }
-}
-
-const test = (...args) => tests.push(args);
-test.skip = (template) => console.log('SKIP', template);
-test.only = (...args) => only.push(args);
+const render = require('./index.js');
+const test = makeTest(render.toString);
 
 const helpers = { upr: (s) => s.toUpperCase(), lwr: (s) => s.toLowerCase() };
 
@@ -85,7 +59,3 @@ test(
   { upr: (s) => s.toUpperCase(), lwr: (s) => s.toLowerCase() },
   'no tags'
 );
-
-// parse('Hi {=a.b} {#zero|Hi {=}!|:foo :bar 3} Yo {?|Nice|} bah');
-
-run();

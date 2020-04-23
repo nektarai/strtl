@@ -51,10 +51,12 @@ function truthy (value) {
 }
 
 function finalize (value = '', helpers, helperFns) {
-  for (const helperStr of helpers) {
-    const [fnName, ...args] = helperStr.split(/\s+/g);
-    if (!helperFns[fnName]) continue;
-    value = helperFns[fnName](value, ...args) || '';
+  if (helperFns) {
+    for (const helperStr of helpers) {
+      const [fnName, ...args] = helperStr.split(/\s+/g);
+      if (!helperFns[fnName]) continue;
+      value = helperFns[fnName](value, ...args) || '';
+    }
   }
   return truthy(value) ? value : '';
 }
