@@ -18,10 +18,10 @@ module.exports = function render(nodes, scopes, helperFns) {
           helpers, helperFns
         );
       case '#':
-        return (finalize(
+        return finalize(
           value.map(item => render(template, [item, ...scopes], helperFns)),
           helpers, helperFns
-        ) || []).join('')
+        );
       default:
         return finalize(
           render(template, scopes, helperFns),
@@ -58,5 +58,7 @@ function finalize (value = '', helpers, helperFns) {
       value = helperFns[fnName](value, ...args) || '';
     }
   }
-  return truthy(value) ? value : '';
+  if (!truthy(value)) return '';
+  if (Array.isArray(value)) return value.join('');
+  return '' + value;
 }

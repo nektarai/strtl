@@ -59,3 +59,15 @@ test(
   { upr: (s) => s.toUpperCase(), lwr: (s) => s.toLowerCase() },
   'no tags'
 );
+
+test.only(
+    'mailto:{#recipientEmails|{=};|:url}?subject={=subject:url}',
+    {
+        recipientEmails: ['rizkisunaryo@gmail.com', 'rizki@nektar.ai'],
+        subject: 'Hi there ^_^'
+    },
+    {
+        url: encodeURIComponent
+    },
+    'mailto:'
+)
