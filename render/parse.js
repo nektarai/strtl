@@ -39,7 +39,7 @@ module.exports = function parse(string) {
     i++;
   }
   if (startIx < string.length) add(string.substr(startIx));
-  return current.template;
+  return stack.length ? stack[0].template : current.template;
 
   function push(token) {
     const node = { tag: token[1], variable: [], template: [], helpers: [] };
@@ -49,7 +49,7 @@ module.exports = function parse(string) {
   }
 
   function pop() {
-    current = stack.pop();
+    if (stack.length) current = stack.pop();
   }
 
   function flip() {

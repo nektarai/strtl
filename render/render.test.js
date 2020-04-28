@@ -60,7 +60,7 @@ test(
   'no tags'
 );
 
-test.only(
+test(
     'mailto:{#recipientEmails|{=};|:url}?subject={=subject:url}',
     {
         recipientEmails: ['rizkisunaryo@gmail.com', 'rizki@nektar.ai'],
@@ -69,5 +69,6 @@ test.only(
     {
         url: encodeURIComponent
     },
-    'mailto:'
-)
+    'mailto:rizkisunaryo%40gmail.com%3B%2Crizki%40nektar.ai%3B?' +
+    'subject=Hi%20there%20%5E_%5E'
+);
