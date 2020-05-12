@@ -72,3 +72,10 @@ test(
     'mailto:rizkisunaryo%40gmail.com%3B%2Crizki%40nektar.ai%3B?' +
     'subject=Hi%20there%20%5E_%5E'
 );
+
+test(
+  '{:now}',
+  {},
+  { now: () => 123 },
+  '123'
+);

@@ -68,6 +68,18 @@ render.toString(
 // Returns 'HELLO%20WORLD'
 ```
 
+Finally, you could also have helper-only tags:
+
+```js
+render.toString(
+  'Die roll: {:roll}',
+  {},
+  { roll: () => 1 + Math.floor(6 * Math.random()) }
+)
+
+// Returns 'Die roll: 4'
+```
+
 ### Default
 
 A default value may be provided, which is used when the placeholder's value is [falsy](#truthiness):

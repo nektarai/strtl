@@ -1,4 +1,5 @@
-import render from './render';
-import build from './build';
+const render = require('./render');
+const build = require('./build');
 
-module.exports = { render, build };
+exports.render = render;
+exports.build = build;

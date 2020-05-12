@@ -5,6 +5,7 @@ const transitions = {
     '{?': ['push', 'variable'],
     '{!': ['push', 'variable'],
     '{|': ['push', 'template'],
+    '{:': ['push', 'helpers'],
     '|}': ['pop', 'template'],
     '|:': ['', 'helpers'],
   },
@@ -39,7 +40,8 @@ module.exports = function parse(string) {
     i++;
   }
   if (startIx < string.length) add(string.substr(startIx));
-  return stack.length ? stack[0].template : current.template;
+  if (stack.length) throw Error('strtl.render.missing }');
+  return current.template;
 
   function push(token) {
     const node = { tag: token[1], variable: [], template: [], helpers: [] };
@@ -49,7 +51,8 @@ module.exports = function parse(string) {
   }
 
   function pop() {
-    if (stack.length) current = stack.pop();
+    if (!stack.length) throw Error('strtl.render.unexpected }');
+    current = stack.pop();
   }
 
   function flip() {
