@@ -35,7 +35,8 @@ const traps = {
         const nodes = node.nodes.concat([delim, wrap(args[0])]);
         return proxy({ ...node, expr, nodes });
       default:
-        return proxy({ ...node, expr, nodes: node.nodes.concat([
+        const tag = expr.length ? node.tag : '';
+        return proxy({ ...node, expr, tag, nodes: node.nodes.concat([
           ':' + name, ...args].join(' ')) })
     }
   }
@@ -50,7 +51,7 @@ const toJSON = ({ tag, expr, nodes }) => () => {
     tagStart = '[{';
     tagEnd = '}]';
     tplTrail = ','
-  } else if (tag === '=') {
+  } else if (tag === '=' || tag === '') {
     exprTrail = ':json'
   }
   let string = prefix + tagStart + tag + expr.join('.');

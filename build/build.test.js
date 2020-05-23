@@ -52,3 +52,8 @@ test(
   }),
   '{"N":{=name:json|{"foo":{=number:json}}|}}'
 )
+
+test(
+  ({ rand }) => ({ roll: rand(1, 2) }),
+  '{"roll":{:rand 1 2:json}}'
+)
