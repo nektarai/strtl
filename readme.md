@@ -1,16 +1,37 @@
 # 😮 Strtl
 
-A shockingly minimal templating language for strings and JSON. This package publishes tiny functions for [rendering](#rendering-templates) and [building](#building-templates) templates.
+A shockingly minimal templating language for strings and JSON.
 
-## Rendering templates
+The syntax is as small and intuitive as possible, while retaining powerful features like custom helpers. There are zero dependencies, and the renderer (used on the client), is under 200 lines of code.
+
+- **[Syntax and rendering](#syntax-and-rendering)**
+  - [Scope](#scope)
+  - [Helpers](#helpers)
+  - [Default](#default)
+  - [Loops](#loops)
+  - [Conditionals](#conditionals)
+  - [Truthiness](#truthiness)
+
+- **[Building JSON templates](#building-json-templates)**
+  - [Concept](#concept)
+  - [Simpe example](#simple-example)
+  - [Helpers](#helpers-1)
+  - [Loops](#loops-1)
+  - [Conditionals](#conditionals-1)
+  - [Default](#default-1)
+  - [Combining helpers](#combining-helpers)
+
+- **[Why JSON templates?](#why-json-templates)**
+
+## Syntax and rendering
 
 ```js
 import render from 'strtl/render';
 ```
 
 There are two render methods:
-- `render.toString()`: Renders a template to a string.
-- `render.toObject()`: Does the same thing and then calls `JSON.parse()` with the result. It literally does nothing else, so the rest of this section covers `toString()`.
+- `render.toString()`: Renders a template to a string and returns it.
+- `render.toObject()`: Does the same thing but does `JSON.parse()` on the result before returning it.
 
 ```js
 render.toString(
@@ -53,6 +74,8 @@ render.toString(
 // Returns 'Total: 3.14'
 ```
 
+The first argument to the helper function will be the value before the `:`. This will be of the same type as in the scope: in the example above, this will be a number. The remaining arguments are from the template, and passed as strings ('2' above).
+
 It's also possible to chain multiple helpers, and to pass a rendered template through helpers:
 
 ```js
@@ -67,6 +90,8 @@ render.toString(
 
 // Returns 'HELLO%20WORLD'
 ```
+
+Helper functions may return any JavaScript value, but the value returned by the last helper in a chain is converted to a string before inserting into the template.
 
 Finally, you could also have helper-only tags:
 
@@ -115,7 +140,7 @@ render.toString(
 // Returns '1984 by George Orwell; 2001 by Arthur C Clarke;'
 ```
 
-When looping over strings or numbers, `{=}` is the placeholder for the current element. Loops also support helpers, which are called with an array of rendered strings.
+When looping over strings or numbers, `{=}` is the placeholder for the current element. Loops also support helpers, which are called with an array of rendered strings as the first argument.
 
 ```js
 render.toString(
@@ -140,19 +165,19 @@ There is also a couple of shortcuts for common patterns:
 
 If a placeholder is considdered falsy if it does not exist in the scope or resolves to `undefined`, `null`, `false`, `0`, an empty string or an empty array. In all other cases, it's considered truthy.
 
-## Building templates
+## Building JSON templates
 
 ```js
 import build from 'strtl/build';
 ```
 
-`build()` is a somewhat magical function to intuitively build templates that can `render.toObject()` into JS objects. There is no equivalent for building string templates - those are easy to write by hand.
+`build()` is a somewhat magical function to intuitively build templates that can `render.toObject()` into JS objects. There is no equivalent function for building string templates, as those are easy to write by hand.
 
 ### Concept
 
-`build()` lets you write a function that does what you want `render.toObject` to do. You can pretend that your function gets packaged up into the template, and gets unpacked and executed with render-time data.
+`build()` accepts a JavaScript function as argument, and returns a template string representing the data transformation operations in that function. You can pretend that the function can time travel into the future when the template is rendered, and the render time data is passed to it as an argument.
 
-That might sound like we're using `eval()` or `new Function()` - we are not. We use ES Proxies to make this syntax work.
+That might sound like we're calling `.toString()` on the function and sending it to the client to be `eval`uated - we are not. We use ES Proxies to make this syntax work.
 
 ### Simple example
 
@@ -163,6 +188,16 @@ build(({ name }) => ({ N: name }))
 ```
 
 Note the `:json` helper. `toObject()` adds this helper transparently; this allows `name` to be any valid JSON object, not just a string.
+
+This template can be used with `.toObject()`:
+
+```js
+render.toObject('{"N":{=name:json}}', { name: 'Alice' })
+// Returns { N: 'Alice' }
+
+render.toObject('{"N":{=name:json}}', { name: ['First', 'Last'] })
+// Returns { N: ['First', 'Last'] }
+```
 
 ### Helpers
 
@@ -239,3 +274,11 @@ build(({ name, number }) => ({
 
 // Returns '{"N":{=name:json|{"foo":{=number:json}}|}}'
 ```
+
+## Why JSON templates
+
+While there are undoubtedly other use cases for a templating language for JSON objects, this is ours:
+
+We have a mobile app that can display custom, user-configured forms, described using JSON. We require client-side interactivity where some fields should be reconfigured (enabled or disabled, shown or hidden, options modified) when the value in another field changes.
+
+Users can now build JSON templates for their forms to express these requirements.
