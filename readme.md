@@ -1,4 +1,4 @@
-# 😮 Strtl
+# 😮 Strtl [![NPM](https://img.shields.io/npm/v/strtl?style=flat-square)](https://www.npmjs.com/package/strtl)
 
 A shockingly minimal templating language for strings and JSON.
 
