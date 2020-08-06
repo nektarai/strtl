@@ -15,14 +15,14 @@ test(
   ({ emails }) => ({
     E: emails.map(e => e),
   }),
-  '{"E":[{#emails|{=:json},|}]}'
+  '{"E":[{#emails|{:json}|:join}]}'
 )
 
 test(
   ({ emails }) => ({
     E: emails.map(e => e.upper()).filter('4'),
   }),
-  '{"E":[{#emails|{=:upper:json},|:filter 4}]}'
+  '{"E":[{#emails|{:upper:json}|:filter 4:join}]}'
 )
 
 test(
@@ -56,4 +56,14 @@ test(
 test(
   ({ rand }) => ({ roll: rand(1, 2) }),
   '{"roll":{:rand 1 2:json}}'
+)
+
+test(
+  ( {foo} ) => ({ ex: 'This is {=} too.', foo}),
+  '{"ex":"This is { =} too.","foo":{=foo:json}}'
+)
+
+test(
+  ({foo}) => ({ ex: 'This is {=} too.', why: build(({ bar}) => ({ foo, bar }))}),
+  '{"ex":"This is { =} too.","why":"{\\"foo\\":{=foo:json},\\"bar\\":{ =bar:json}}"}'
 )

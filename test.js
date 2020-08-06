@@ -15,16 +15,18 @@ function runTest([fn, ...args]) {
   let result;
   try {
     result = fn(...args);
-    assert.equal(result, expected);
-    console.log('PASS', expected);
+    assert.deepEqual(result, expected);
+    console.log('PASS', fn.name, expected);
   } catch (e) {
-    console.log('FAIL', expected);
+    console.log('FAIL', fn.name, expected);
     console.error('Error:', e);
   }
 }
 
+require('./common/spacecape.test.js');
 require('./build/build.test.js');
-require('./render/render.test.js');
+require('./render/toString.test.js');
+require('./render/toObject.test.js');
 
 if (only.length) {
   only.forEach(runTest);

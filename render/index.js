@@ -8,10 +8,11 @@ function toString (template, scopes, helperFns) {
 }
 
 function toObject (template, scopes, helperFns = {}) {
-  return JSON.parse(template, scopes, {
+  return JSON.parse(toString(template, scopes, {
     ...helperFns,
-    json: JSON.stringify
-  })
+    json: JSON.stringify,
+    join: (arr, delim=',') => arr.join(delim)
+  }));
 }
 
 module.exports = {
