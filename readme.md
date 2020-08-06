@@ -10,6 +10,7 @@ The syntax is as small and intuitive as possible, while retaining powerful featu
   - [Default](#default)
   - [Loops](#loops)
   - [Conditionals](#conditionals)
+  - [Escaping](#escaping)
   - [Truthiness](#truthiness)
 
 - **[Building JSON templates](#building-json-templates)**
@@ -160,6 +161,15 @@ There is also a couple of shortcuts for common patterns:
 
 - `{?variable|True template|:|False template|}`. If-else without repeating the variable. This is syntactic sugar for `{?variable|True template|}{!variable|False template|}`.
 - `{#variable|Repeating Template|:|Empty template|}`. A default value for empty loops. Syntactic sugar for `{#variable|Repeating Template|}{!variable|Empty template|}`.
+
+### Escaping
+
+There are no reserved characters that need to be escaped. However the following 2-character tokens, if they appear in the text, need to be escaped:
+
+- Start of an embedded tag: `{=`, `{#`, `{?`, `{!`, `{:` `{|`
+- End of a nested template: `|:`, `|}`
+
+Escaping is performed by inserting a space character between the two characters of the token. If a string is escaped twice, it will have two spaces, and so on. Each call to render un-escapes once by removing a single space.
 
 ### Truthiness
 

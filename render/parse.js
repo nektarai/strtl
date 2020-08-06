@@ -1,3 +1,5 @@
+const { spaceLess } = require('../common/spacecape.js');
+
 const transitions = {
   template: {
     '{=': ['push', 'variable'],
@@ -70,6 +72,7 @@ module.exports = function parse(string) {
   }
 
   function add(value, token) {
+    if (context === 'template') value = spaceLess(value);
     if (value) current[context].push(value);
     if (!token) return;
     const [op, nextState] = transitions[context][token];
