@@ -1,0 +1,1 @@
+exports.isTemplate = Symbol();

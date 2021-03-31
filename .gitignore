@@ -1,6 +1,8 @@
 node_modules
 yarn.lock
 
+strtl.min.js
+
 # misc
 .DS_Store
 .env.local
