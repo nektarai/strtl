@@ -109,3 +109,43 @@ test('indexes', () => {
 test('unescape', () => expect(strtl(
   'Hi { |zero|  }'
 )).toEqual('Hi {|zero| }'));
+
+test('numbers_stack', () => expect(strtl(
+  'A is {= a: .3: add}',
+  { a: 4, add: (a, b) => a + b }
+)).toEqual('A is 4.3'));
+
+test('numbers_operators', () => expect(strtl(
+  'B is {= b + 1 * .5 * 8}',
+  { b: 3 }
+)).toEqual(
+  'B is 16'
+));
+
+test('cond_expr', () => expect(strtl(
+  '{?foo%2=0|Even|:|Odd|}',
+  { foo: 5 }
+)).toEqual(
+  'Odd'
+));
+
+test('fizzbuzz', () => expect(strtl(
+  '{#it |{=} {?.+ 1%3=0|Fizz|}{?.+ 1%5=0|Buzz|}|:"\\n"}',
+  { it: 'abcdefghijklmno'.split('') }
+)).toEqual(
+  'a \n' +
+  'b \n' +
+  'c Fizz\n' +
+  'd \n' +
+  'e Buzz\n' +
+  'f Fizz\n' +
+  'g \n' +
+  'h \n' +
+  'i Fizz\n' +
+  'j Buzz\n' +
+  'k \n' +
+  'l Fizz\n' +
+  'm \n' +
+  'n \n' +
+  'o FizzBuzz'
+));

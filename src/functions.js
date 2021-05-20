@@ -95,11 +95,12 @@ exports['!'] = conditional(false);
 
 exports.wrapFn = function (fn) {
   return (string, {stack, scopes}) => {
+    debug({ before: fn.name, stack, scopes });
     const args = stack.splice(-fn.length).map(arg => arg && arg[isTemplate]
       ? render(string, scopes, arg.start)
       : arg
     );
     stack.push(fn(...args));
-    debug('Called', fn.name, args, stack);
+    debug({ after: fn.name, args, stack });
   };
 };

@@ -1,5 +1,6 @@
 const debug = require('../debug')('strtl:var');
 const { wrapFn } = require('../functions.js');
+const { evalFn } = require('../heap.js');
 
 const startWord = (heap) => {
   heap.tokenStart = heap.pos;
@@ -13,7 +14,7 @@ const incr = (heap) => {
   heap.leadingDots++;
 };
 
-const endVar = (heap) => {
+const pushVar = (heap, state, string) => {
   let { path, stack, scopes, leadingDots } = heap;
 
   let value;
@@ -34,13 +35,14 @@ const endVar = (heap) => {
     value = scopes.indexes[leadingDots - 1];
   }
 
-  debug(path, value, leadingDots);
+  if (state === 'var.operator' && typeof value !== 'function') {
+    throw Error(`Expected function for operator ${path[0]}, found ${value}`);
+  }
+
+  debug({ path, value, leadingDots });
 
   if (typeof value === 'function') {
-    if (heap.currentFn) {
-      throw Error(`Unexpected function ${path.join('.')
-      } in the argument list of function ${heap.currFnName}`);
-    }
+    evalFn(heap, state, string);
     heap.currentFn = wrapFn(value);
     heap.currFnName = path.join('.');
   } else {
@@ -51,21 +53,37 @@ const endVar = (heap) => {
   return 'tag';
 };
 
+const startOperator = (heap, state, string) => {
+  let { path, leadingDots } = heap;
+
+  // Is there an unfinished var (with trailing dots) before this?
+  if (path.length || leadingDots) return pushVar(heap, state, string);
+
+  startWord(heap, state, string);
+  return 'var.operator';
+};
+
 exports.transits = {
   'var': {
     '.': [incr, 'var'],
     'alpha': [startWord, 'var.word'],
-    '': endVar
+    'operator': startOperator,
+    'whitespace': 'var',
+    '': pushVar
   },
   'var.word': {
     'alpha_digit': 'var.word',
     '.': [endWord, 'var'],
-    'whitespace': 'var.dot?',
-    '': [endWord, endVar]
+    'whitespace': [endWord, 'var.dot?'],
+    '': [endWord, pushVar]
   },
   'var.dot?': {
     'whitespace': 'var.dot?',
     '.': 'var',
-    '': endVar
+    '': pushVar
+  },
+  'var.operator': {
+    'operator': 'var.operator',
+    '': [endWord, pushVar]
   }
 };

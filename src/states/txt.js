@@ -6,10 +6,6 @@ const chunk = (heap, state, string) => {
     heap.out(string.substring(heap.tokenStart, heap.pos - 1));
   }
 };
-// const chunk2 = (heap, state, string) => {
-//   debug('chunk2');
-//   heap.out(string.substring(heap.tokenStart, heap.pos - 3));
-// };
 
 const final = (heap, state, string) => {
   debug('final');

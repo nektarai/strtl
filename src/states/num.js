@@ -1,5 +1,7 @@
+const debug = require('../debug')('strtl:num');
 const pushNumber = (heap, state, string) => {
   const { stack, pos, tokenStart } = heap;
+  debug('parsing', { str: string.substring(tokenStart, pos) });
   stack.push(parseFloat(string.substring(tokenStart, pos)));
   heap.pos--; // We need to process this character again in the 'tag' context.
   return 'tag';

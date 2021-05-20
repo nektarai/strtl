@@ -1,5 +1,4 @@
 const debug = require('../debug')('strtl:tup');
-
 const { isTemplate } = require('../constants.js');
 
 const incr = (heap) => {
@@ -19,10 +18,6 @@ const decr = (next) => (heap) => {
   }
   return next;
 };
-
-// const back = (heap) => {
-//   heap.pos--;
-// };
 
 exports.transits = {
   'tup': {

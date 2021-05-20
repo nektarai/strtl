@@ -18,3 +18,9 @@ exports.alpha = (char) => (
 exports.digit = (char) => (
   char >= '0' && char <= '9'
 ) && 'digit';
+
+exports.operator = (char) => (
+  char === '+' || char === '-' || char === '*' || char === '/' ||
+  char === '%' || char === '^' ||
+  char === '<' || char === '>' || char === '='
+) && 'operator';
