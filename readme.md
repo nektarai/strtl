@@ -23,7 +23,7 @@ The syntax is as small and intuitive as possible, while retaining powerful featu
   - [Combining helpers](#combining-helpers)
 
 - **[Why JSON templates?](#why-json-templates)**
-
+arstarstawrst
 ## Syntax and rendering
 
 ```js
